@@ -36,7 +36,7 @@ public class MyAvroFileWriter implements MyWriter {
 		        org.apache.hadoop.fs.LocalFileSystem.class.getName()
 		    );
 		try {
-			this.fs = FileSystem.get(new URI("hdfs://HOST:27000"), config);
+			this.fs = FileSystem.get(new URI("hdfs://10.4.41.51:27000"), config);
 		}
 		catch (URISyntaxException e) {
 			e.printStackTrace();

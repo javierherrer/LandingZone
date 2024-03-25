@@ -26,7 +26,7 @@ public class MyHDFSSequenceFileReader implements MyReader {
 			        org.apache.hadoop.fs.LocalFileSystem.class.getName()
 			    );
             config.addResource(new Path("/home/bdm/BDM_Software/hadoop/etc/hadoop/core-site.xml"));
-            this.fs = FileSystem.get(new URI("hdfs://HOST:27000"), config);
+            this.fs = FileSystem.get(new URI("hdfs://10.4.41.51:27000"), config);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

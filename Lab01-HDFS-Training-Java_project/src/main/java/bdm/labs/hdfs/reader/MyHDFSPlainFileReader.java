@@ -25,7 +25,7 @@ public class MyHDFSPlainFileReader implements MyReader {
 			config.set("fs.file.impl",
 			        org.apache.hadoop.fs.LocalFileSystem.class.getName()
 			    );
-			this.fs = FileSystem.get(new URI("hdfs://HOST:27000"), config);
+			this.fs = FileSystem.get(new URI("hdfs://10.4.41.51:27000"), config);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
