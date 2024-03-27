@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" modified="2024-03-27T13:46:50.199Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:123.0) Gecko/20100101 Firefox/123.0" etag="5BmBDmBUuFdP2mogkt8-" version="22.1.18" type="device">
+  <diagram name="Page-1" id="QcY8pF3KMhk72lL9oD7g">
+    <mxGraphModel dx="1062" dy="588" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-3" value="Data Sources" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="140" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-10" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://datos.gob.es/sites/default/files/styles/success_image/public/success/images/idealista.jpg?itok=uX21SrOq;" vertex="1" parent="C_PhknPC8fW5pxqQHv9r-3">
+          <mxGeometry x="12.11" y="85" width="115.78" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-11" value="Landing Zone" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="80" width="480" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-13" value="Temporal Landing" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="C_PhknPC8fW5pxqQHv9r-11">
+          <mxGeometry x="40" y="40" width="160" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-16" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://cdn-icons-png.freepik.com/512/617/617570.png;" vertex="1" parent="C_PhknPC8fW5pxqQHv9r-13">
+          <mxGeometry x="40" y="40" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-14" value="Persistent Landing" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="C_PhknPC8fW5pxqQHv9r-11">
+          <mxGeometry x="280" y="40" width="160" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-15" value="" style="shape=image;imageAspect=0;aspect=fixed;verticalLabelPosition=bottom;verticalAlign=top;image=https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/MongoDB_Logo.svg/2560px-MongoDB_Logo.svg.png;" vertex="1" parent="C_PhknPC8fW5pxqQHv9r-14">
+          <mxGeometry x="5.710000000000036" y="60" width="148.57" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="C_PhknPC8fW5pxqQHv9r-11" source="C_PhknPC8fW5pxqQHv9r-18" target="C_PhknPC8fW5pxqQHv9r-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-18" value="Data Persistence Loader" style="rounded=1;whiteSpace=wrap;html=1;rotation=-90;" vertex="1" parent="C_PhknPC8fW5pxqQHv9r-11">
+          <mxGeometry x="80" y="170" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="C_PhknPC8fW5pxqQHv9r-11" source="C_PhknPC8fW5pxqQHv9r-16" target="C_PhknPC8fW5pxqQHv9r-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-17" value="Data Collectors" style="rounded=1;whiteSpace=wrap;html=1;rotation=-90;" vertex="1" parent="1">
+          <mxGeometry x="30" y="250" width="400" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="C_PhknPC8fW5pxqQHv9r-10">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="200" y="200" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="200" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C_PhknPC8fW5pxqQHv9r-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="C_PhknPC8fW5pxqQHv9r-17" target="C_PhknPC8fW5pxqQHv9r-16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="260" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
