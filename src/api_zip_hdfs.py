@@ -2,7 +2,7 @@ import requests
 import json
 import os
 
-def main():
+def download_unemployment():
     # URL de la API
     url = "https://opendata-ajuntament.barcelona.cat/data/api/action/datastore_search?resource_id=af79b704-ff47-48f7-a66b-8b9fd738a5f1&limit=877"
     
@@ -29,8 +29,10 @@ def main():
             archivo.write(datos_bytes)
         
         print("Los datos se han guardado correctamente en la carpeta:", carpeta_destino)
+        return True
     else:
         print("Error al hacer la solicitud:", respuesta.status_code)
+        return False
 
 if __name__ == "__main__":
-    main()
+    download_unemployment()

@@ -62,7 +62,7 @@ def load_json(hdfs_client, hdfs_file_path, collection, set_of_files):
     # Insert data into MongoDB collection
     try: 
         collection.insert_many(json_data)
-        set_of_files.add(filepath)
+        set_of_files.add(hdfs_file_path)
     except TypeError as e: 
         print(e)
 
@@ -79,7 +79,7 @@ def load_csv(hdfs_client, hdfs_file_path, collection, set_of_files):
     # Insert data into MongoDB collection
     try: 
         collection.insert_many(csv_data)
-        set_of_files.add(filepath)
+        set_of_files.add(hdfs_file_path)
     except TypeError as e: 
         print(e)
 
@@ -103,7 +103,7 @@ def update_tracking_files(set_of_files, directory="tracking_data", file="trackin
 # Example usage:
 
 
-if __name__ == '__main__':
+def persistent_collector():
     ## Extract arguments
     args = get_parser().parse_args()
     
@@ -141,5 +141,7 @@ if __name__ == '__main__':
                         load_csv(hdfs_client=hdfs_client, hdfs_file_path=filepath, collection=mongo_collection, set_of_files=set_of_files)
 
         update_tracking_files(set_of_files=set_of_files)
+
+    return True
     
 
