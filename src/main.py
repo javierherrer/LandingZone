@@ -10,7 +10,7 @@ if __name__ == "__main__":
     print("_" * 100)
     print("Transferring files...")
     print("")
-    transfer_source_files(vm, "C:\\Users\\Admin\\Desktop\\MASTER\\Q2\\BDM\\LAB\\data\\data.zip", "/home/bdm/data/data.zip")
+    transfer_source_files(vm, "data/data.zip", "/home/bdm/data/data.zip")
 
     print("Unzipping files...")
     print("")

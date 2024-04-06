@@ -1,8 +1,9 @@
-from connect_to_vm import VM
+from vm_connection import VM
 from hdfs import InsecureClient
 import argparse
 from pymongo import MongoClient
 import json
+import pickle as pkl
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -64,6 +65,27 @@ def load_json(hdfs_client, hdfs_file_path, collection):
         try: collection.insert_many(json_data)
         except TypeError as e: print(e)
 
+
+import os
+
+def load_tracking_files(directory="tracking_data", file="tracking_data.pkl"):
+    try: 
+        with open(f"{directory}/{file}", 'rb') as f:
+            set_of_files = pkl.load(f)
+    except FileNotFoundError: 
+        with open(f"{directory}/{file}", 'wb') as f:
+            set_of_files = set()
+            pkl.dump(set_of_files, f)
+
+    return set_of_files
+
+def update_tracking_files(set_of_files, directory="tracking_data", file="tracking_data.pkl"):
+    with open(f"{directory}/{file}", 'wb') as f:
+        pkl.dump(set_of_files, f)
+
+# Example usage:
+
+
 if __name__ == '__main__':
     ## Extract arguments
     args = get_parser().parse_args()
@@ -71,14 +93,32 @@ if __name__ == '__main__':
     ## Connect to VM
     vm = VM()
     
+    print('----------------------------------------------------------')
+    print('Starting MongoDB on Virtual Machine...')
+    command = '~/BDM_Software/mongodb/bin/mongod --bind_ip_all --dbpath /home/bdm/BDM_Software/data/mongodb_data/ --fork --logpath /home/bdm/BDM_Software/data/mongodb_data/mongod.log'
+    output = vm.exe(command)
+    print(output)
+
     ## Load hdfs client
     hdfs_client = initialize_hdfs(hostname=vm.hostname, port=args.hdfs_port, user=vm.username)
 
     ## Initialize mongo collection
     mongo_collection = initialize_mongodb(hostname=vm.hostname, port=args.mongo_port, name_db=args.name_mongo_db,  collection_name='idealista')
 
+    os.makedirs("tracking_data", exist_ok=True)
+    set_of_files = load_tracking_files()
+
+
     for src in hdfs_client.list('/user/temporary'):
-        for dt in hdfs_client.list(f'/user/temporary/{src}'):
-            for file in hdfs_client.list(f'/user/temporary/{src}/{dt}'):
-                print(file)
+        if src == 'idealista':
+            for dt in hdfs_client.list(f'/user/temporary/{src}'):
+                for file in hdfs_client.list(f'/user/temporary/{src}/{dt}'):
+                    filepath = f'/user/temporary/{src}/{dt}/{file}'
+                    if filepath in set_of_files: pass
+                    else:
+                        load_json(hdfs_client=hdfs_client, hdfs_file_path=filepath, collection=mongo_collection)
+                        set_of_files.add(filepath)
+
+    update_tracking_files(set_of_files=set_of_files)
+    
 
