@@ -34,13 +34,6 @@ def connect_to_vm():
     vm = VM()
     return vm
 
-def get_arguments():
-    parser = get_parser()
-    args = parser.parse_args()
-    vm = connect_to_vm()
-    
-
-
 def initialize_hdfs(hostname, port, user):
     hdfs_client = InsecureClient('http://{}:{}/'.format(hostname, port), user=user)
     return hdfs_client
@@ -116,6 +109,7 @@ if __name__ == '__main__':
                     filepath = f'/user/temporary/{src}/{dt}/{file}'
                     if filepath in set_of_files: pass
                     else:
+                        print(filepath)
                         load_json(hdfs_client=hdfs_client, hdfs_file_path=filepath, collection=mongo_collection)
                         set_of_files.add(filepath)
 

@@ -20,7 +20,9 @@ if __name__ == "__main__":
     print("")
     delete_file_in_dir(vm, '/home/bdm/data/data.zip')
 
-    files = get_files_in_folder(vm, '/home/bdm/data')
+    files = get_files_in_folder(vm, '/home/bdm/data/data')
+    print("FIles are: ", files)
+
     if not check_if_hdfs_dir_exists(vm, f'temporary'):
         make_hdfs_dir(vm, f'temporary')
     for file in files.split('\n'):
@@ -49,20 +51,20 @@ if __name__ == "__main__":
             print("." * 100)
             print(f"Loading files from {file} to hdfs dir: /user/temporary/{file}/{date}...")
 
-            fs = get_files_in_folder(vm, f'/home/bdm/data/{file}')
+            fs = get_files_in_folder(vm, f'/home/bdm/data/data/{file}')
             hdfs_query = ""
             delete_query = ""
             for f in fs.split('\n'):
                 if f != "":
-                    hdfs_query = query_composer(hdfs_query, move_to_hfds_query(f'/home/bdm/data/{file}/{f}', f'/user/temporary/{file}/{date}'))
-                    delete_query = query_composer(delete_query, f'rm /home/bdm/data/{file}/{f}')
+                    hdfs_query = query_composer(hdfs_query, move_to_hfds_query(f'/home/bdm/data/data/{file}/{f}', f'/user/temporary/{file}/{date}'))
+                    delete_query = query_composer(delete_query, f'rm /home/bdm/data/data/{file}/{f}')
 
             vm.exe(hdfs_query)
             print("All files moved successfully!")
             print("")
             print(f"Deleting /{file}...")
             vm.exe(delete_query)
-            delete_dir(vm, f'/home/bdm/data/{file}')
+            delete_dir(vm, f'/home/bdm/data/data/{file}')
             print("")
             print(f"All files from {file} were successfully processed")
             print("_"*100)
