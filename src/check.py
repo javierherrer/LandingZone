@@ -6,7 +6,6 @@ import json
 import pickle as pkl
 import os
 
-import pandas as pd
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -54,34 +53,13 @@ def initialize_mongodb(hostname, port, name_db, collection_name):
     return collection
 
 
-def load_json(hdfs_client, hdfs_file_path, collection, set_of_files):
+def load_json(hdfs_client, hdfs_file_path, collection):
     with hdfs_client.read(hdfs_file_path, encoding='utf-8') as reader:
         json_data = json.load(reader)
-    if collection.name == 'unemployment-data': 
-        json_data = dict(json_data)['result']['records']
-    # Insert data into MongoDB collection
-    try: 
-        collection.insert_many(json_data)
-        set_of_files.add(filepath)
-    except TypeError as e: 
-        print(e)
-
-
-
-def load_csv(hdfs_client, hdfs_file_path, collection, set_of_files):
-    # Read CSV file into a DataFrame
-    with hdfs_client.read(hdfs_file_path, encoding='utf-8') as reader:
-        df = pd.read_csv(reader)
-    
-    # Convert DataFrame to a list of dictionaries (JSON-like format)
-    csv_data = df.to_dict(orient='records')
-    
-    # Insert data into MongoDB collection
-    try: 
-        collection.insert_many(csv_data)
-        set_of_files.add(filepath)
-    except TypeError as e: 
-        print(e)
+        if collection == 'unemployment-data': print(json_data) 
+        # Insert data into MongoDB collection
+        try: collection.insert_many(json_data)
+        except TypeError as e: print(e)
 
 
 
@@ -118,28 +96,12 @@ if __name__ == '__main__':
 
     ## Load hdfs client
     hdfs_client = initialize_hdfs(hostname=vm.hostname, port=args.hdfs_port, user=vm.username)
+    with hdfs_client.read("/user/temporary/unemployment-data/2024-04-06/datos_barcelona.json", encoding='utf-8') as reader:
+        json_data = json.load(reader)
 
-    os.makedirs("tracking_data", exist_ok=True)
-    set_of_files = load_tracking_files()
+    collection = initialize_mongodb(hostname=vm.hostname, port=args.mongo_port, name_db=args.name_mongo_db,  collection_name="unemployment-data")
+    print(dict(json_data)['result']['records'])
+    collection.insert_many(dict(json_data)['result']['records'])
 
-
-    for src in hdfs_client.list(vm._DIR_TEMPORAL):
-        if src in ['idealista', 'unemployment-data']: json_ = True
-        else: json_ = False
-        ## Initialize mongo collection
-        mongo_collection = initialize_mongodb(hostname=vm.hostname, port=args.mongo_port, name_db=args.name_mongo_db,  collection_name=src)
-            
-        for dt in hdfs_client.list(f'{vm._DIR_TEMPORAL}/{src}'):
-            for file in hdfs_client.list(f'{vm._DIR_TEMPORAL}/{src}/{dt}'):
-                filepath = f'{vm._DIR_TEMPORAL}/{src}/{dt}/{file}'
-                if filepath in set_of_files: pass
-                else:
-                    print(filepath)
-                    if json_: 
-                        load_json(hdfs_client=hdfs_client, hdfs_file_path=filepath, collection=mongo_collection, set_of_files=set_of_files)
-                    else: 
-                        load_csv(hdfs_client=hdfs_client, hdfs_file_path=filepath, collection=mongo_collection, set_of_files=set_of_files)
-
-        update_tracking_files(set_of_files=set_of_files)
     
 

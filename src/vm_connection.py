@@ -2,7 +2,7 @@ import paramiko
 
 class VM():
 
-    _DIR_TEMPORAL = "/user/temporal"
+    _DIR_TEMPORAL = "/user/temporary"
 
     def __init__(self, hostname="10.4.41.51", port=22, username="bdm", password="bdm"):
         self.hostname = hostname
