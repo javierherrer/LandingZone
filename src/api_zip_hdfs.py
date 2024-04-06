@@ -1,8 +1,6 @@
 import requests
 import json
 import os
-import zipfile
-from io import BytesIO
 
 def main():
     # URL de la API
@@ -19,14 +17,18 @@ def main():
         # Convertir los datos JSON a bytes
         datos_bytes = json.dumps(datos_json).encode('utf-8')
         
-        # Ruta del archivo ZIP existente
-        ruta_zip = r'C:\Users\Admin\Desktop\MASTER\Q2\BDM\LAB\data\data.zip'
+        # Crear una carpeta si no existe
+        carpeta_destino = '../resources/unemployment-data'
         
-        # Agregar los datos al archivo ZIP existente
-        with zipfile.ZipFile(ruta_zip, 'a') as zipf:
-            zipf.writestr('datos_barcelona.json', datos_bytes)
+        if not os.path.exists(carpeta_destino):
+              os.makedirs(carpeta_destino)
         
-        print("Los datos se han agregado correctamente al archivo ZIP")
+        # Escribir los datos en un archivo en la carpeta
+        ruta_archivo = os.path.join(carpeta_destino, 'datos_barcelona.json')
+        with open(ruta_archivo, 'wb') as archivo:
+            archivo.write(datos_bytes)
+        
+        print("Los datos se han guardado correctamente en la carpeta:", carpeta_destino)
     else:
         print("Error al hacer la solicitud:", respuesta.status_code)
 
