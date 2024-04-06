@@ -4,6 +4,8 @@ import argparse
 from pymongo import MongoClient
 import json
 import pickle as pkl
+import os
+
 
 def get_parser():
     parser = argparse.ArgumentParser()
@@ -59,7 +61,6 @@ def load_json(hdfs_client, hdfs_file_path, collection):
         except TypeError as e: print(e)
 
 
-import os
 
 def load_tracking_files(directory="tracking_data", file="tracking_data.pkl"):
     try: 
@@ -95,18 +96,20 @@ if __name__ == '__main__':
     ## Load hdfs client
     hdfs_client = initialize_hdfs(hostname=vm.hostname, port=args.hdfs_port, user=vm.username)
 
-    ## Initialize mongo collection
-    mongo_collection = initialize_mongodb(hostname=vm.hostname, port=args.mongo_port, name_db=args.name_mongo_db,  collection_name='idealista')
+
 
     os.makedirs("tracking_data", exist_ok=True)
     set_of_files = load_tracking_files()
 
 
-    for src in hdfs_client.list('/user/temporary'):
-        if src == 'idealista':
-            for dt in hdfs_client.list(f'/user/temporary/{src}'):
-                for file in hdfs_client.list(f'/user/temporary/{src}/{dt}'):
-                    filepath = f'/user/temporary/{src}/{dt}/{file}'
+    for src in hdfs_client.list(vm._DIR_TEMPORAL):
+        if src in ['idealista', 'unemployment-data']:
+            ## Initialize mongo collection
+            mongo_collection = initialize_mongodb(hostname=vm.hostname, port=args.mongo_port, name_db=args.name_mongo_db,  collection_name=src)
+            
+            for dt in hdfs_client.list(f'{vm._DIR_TEMPORAL}/{src}'):
+                for file in hdfs_client.list(f'{vm._DIR_TEMPORAL}/{src}/{dt}'):
+                    filepath = f'{vm._DIR_TEMPORAL}/{src}/{dt}/{file}'
                     if filepath in set_of_files: pass
                     else:
                         print(filepath)

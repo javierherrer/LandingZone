@@ -49,14 +49,17 @@ if __name__ == "__main__":
                 print("")
 
             print("." * 100)
-            print(f"Loading files from {file} to hdfs dir: /user/temporary/{file}/{date}...")
+            print(f"Loading files from {file} to hdfs dir: {vm._DIR_TEMPORAL}/{file}/{date}...")
 
             fs = get_files_in_folder(vm, f'/home/bdm/data/data/{file}')
             hdfs_query = ""
             delete_query = ""
             for f in fs.split('\n'):
                 if f != "":
-                    hdfs_query = query_composer(hdfs_query, move_to_hfds_query(f'/home/bdm/data/data/{file}/{f}', f'/user/temporary/{file}/{date}'))
+                    hdfs_query = query_composer(
+                        hdfs_query, 
+                        move_to_hfds_query(f'/home/bdm/data/data/{file}/{f}', f'{vm._DIR_TEMPORAL}/{file}/{date}')
+                    )
                     delete_query = query_composer(delete_query, f'rm /home/bdm/data/data/{file}/{f}')
 
             vm.exe(hdfs_query)
