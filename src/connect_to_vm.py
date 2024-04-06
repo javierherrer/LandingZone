@@ -104,7 +104,7 @@ def start_hdfs(vm):
     vm.exe(command)
 
 def create_alias_hdfs(vm):
-    command = "alias hdfs='/home/bdm/BDM_Software/hadoop/bin/hdfs dfs'"
+    command = "alias hdfs='/home/bdm/BDM_Software/hadoop/bin/hdfs'"
     vm.exe(command)
 
 
