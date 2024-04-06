@@ -66,13 +66,13 @@ def get_files_in_folder(vm, dir):
 
 
 def move_file_to_hdfs(vm, filepath, hdfspath):
-    cmd = (f'hdfs dfs -put {filepath} {hdfspath}')
+    cmd = (f'/home/bdm/BDM_Software/hadoop/bin/hdfs dfs -put {filepath} {hdfspath}')
     print(f"cmd: {cmd}")
     vm.exe(cmd)
 
 
 def check_if_hdfs_dir_exists(vm, path):
-    cmd = (f'hdfs dfs -test -d /user/{path} \n'
+    cmd = (f'/home/bdm/BDM_Software/hadoop/bin/hdfs dfs -test -d /user/{path} \n'
            f'echo $?')
     o = vm.exe(cmd)[0]
     if o == "0":
@@ -82,7 +82,7 @@ def check_if_hdfs_dir_exists(vm, path):
 
 
 def make_hdfs_dir(vm, dir):
-    cmd = (f'hdfs dfs -mkdir /user/{dir}')
+    cmd = (f'/home/bdm/BDM_Software/hadoop/bin/hdfs dfs -mkdir /user/{dir}')
     vm.exe(cmd)
 
 
@@ -96,17 +96,7 @@ def query_composer(q: str, add: str):
 
 
 def move_to_hfds_query(filepath, hdfspath):
-    return f'hdfs dfs -put {filepath} {hdfspath}'
-
-
-def start_hdfs(vm):
-    command = "bash /home/bdm/BDM_Software/hadoop/sbin/start-dfs.sh"
-    vm.exe(command)
-
-def create_alias_hdfs(vm):
-    command = "alias hdfs='/home/bdm/BDM_Software/hadoop/bin/hdfs'"
-    vm.exe(command)
-
+    return f'/home/bdm/BDM_Software/hadoop/bin/hdfs dfs -put {filepath} {hdfspath}'
 
 
 if __name__ == "__main__":
@@ -114,19 +104,6 @@ if __name__ == "__main__":
     date = datetime.date.today()
 
     root_directory = "/home/bdm/data"
-
-    ## Starting hdfs
-    print("_"*100)
-    print("Starting hdfs...")
-    print("")
-    start_hdfs(vm=vm)
-
-
-    print("_"*100)
-    print("Creating alias...")
-    print("")
-    create_alias_hdfs(vm=vm)
-
 
 
     print("_"*100)
