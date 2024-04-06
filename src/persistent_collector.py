@@ -78,5 +78,7 @@ if __name__ == '__main__':
     mongo_collection = initialize_mongodb(hostname=vm.hostname, port=args.mongo_port, name_db=args.name_mongo_db,  collection_name='idealista')
 
     for src in hdfs_client.list('/user/temporary'):
-        print(src)
+        for dt in hdfs_client.list(f'/user/temporary/{src}'):
+            for file in hdfs_client.list(f'/user/temporary/{src}/{dt}'):
+                print(file)
 
