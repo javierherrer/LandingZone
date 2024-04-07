@@ -2,12 +2,17 @@ import datetime
 from vm_connection import VM
 from file_operations import (transfer_source_files, delete_file_in_dir, unzip_source_files,
                              get_files_in_folder, check_if_hdfs_dir_exists, make_hdfs_dir,
-                             delete_dir, move_file_to_hdfs, query_composer, move_to_hfds_query)
+                             delete_dir, move_file_to_hdfs, query_composer, move_to_hfds_query, make_dir)
+from cli_parser import get_parser
+
+args = get_parser().parse_args()
 
 def execute_data_collector(args):
     print("Uploading files")
     vm = VM(hostname=args.host_ip, port=22, username=args.vm_user, password=args.vm_pass)
     date = datetime.date.today()
+    make_dir(vm=vm, dir="data")
+
     print("_" * 100)
     print("Transferring files...")
     print("")
@@ -66,9 +71,12 @@ def execute_data_collector(args):
             vm.exe(hdfs_query)
             print("All files moved successfully!")
             print("")
-            print(f"Deleting /{file}...")
-            vm.exe(delete_query)
-            delete_dir(vm, f'/home/bdm/data/{file}')
-            print("")
+
             print(f"All files from {file} were successfully processed")
             print("_"*100)
+
+        vm.exe(delete_query)
+        delete_dir(vm, f'/home/bdm/data')
+
+if __name__ == '__main__':
+    execute_data_collector(args=args)

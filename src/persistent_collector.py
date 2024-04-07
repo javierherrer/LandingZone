@@ -8,7 +8,9 @@ import os
 
 import pandas as pd
 
+from cli_parser import get_parser
 
+args = get_parser().parse_args()
 
 def connect_to_vm():
     vm = VM()
@@ -116,5 +118,7 @@ def persistent_collector(args):
         update_tracking_files(set_of_files=set_of_files)
 
     return True
-    
+
+if __name__ == '__main__':
+    persistent_collector(args=args)
 

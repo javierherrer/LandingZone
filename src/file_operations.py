@@ -37,7 +37,11 @@ def make_hdfs_dir(vm, dir):
     vm.exe(cmd)
 
 def remove_hdfs_dir(vm, dir):
-    cmd = (f'/home/bdm/BDM_Software/hadoop/bin/hdfs dfs -rm -r /user/{dir}')
+    cmd = (f'/home/bdm/BDM_Software/hadoop/bin/hdfs dfs -rm -r {dir}')
+    vm.exe(cmd)
+
+def make_dir(vm, dir):
+    cmd = (f"mkdir {dir}")
     vm.exe(cmd)
 
 
