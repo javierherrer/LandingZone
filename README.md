@@ -17,7 +17,7 @@ Before you begin, ensure you have the following installed:
 
 1. Clone the repository to your local machine:
    ```
-   git clone [https://github.com/your-repository-url.git](https://github.com/javierherrer/LandingZone.git)
+   git clone https://github.com/javierherrer/LandingZone.git
    ```
 2. Navigate to the project directory:
    ```
