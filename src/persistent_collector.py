@@ -8,30 +8,7 @@ import os
 
 import pandas as pd
 
-def get_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--host_ip",
-                        help="host ip of virtual machine / mongo server",
-                        type=str, default = '10.4.41.51')
-    parser.add_argument("-d", "--hdfs_port",
-                        help="hdfs port of virtual machine",
-                        type=int, default = 9870)
-    parser.add_argument("-m", "--mongo_port",
-                        help="mongo port of mongodb instance in virtual machine",
-                        type=int, default = 27017)                    
-    parser.add_argument("-u", "--vm_user",
-                        help="username to log into virtual machine",
-                        type=str, default = 'bdm')
-    parser.add_argument("-p", "--vm_pass",
-                        help="password to log into virtual machine",
-                        type=str, default = 'bdm')
-    parser.add_argument("-n", "--name_mongo_db", 
-                        help="Name of the mongo database",
-                        type=str, default='P1')
-    parser.add_argument("-a", "--allow_metadata",
-                        help="Wheather or not to work with a seperate metadata file keeping track of which data has already been added to mongoDB.",
-                        type=str, default='True')         
-    return parser
+
 
 def connect_to_vm():
     vm = VM()
@@ -56,6 +33,7 @@ def initialize_mongodb(hostname, port, name_db, collection_name):
 
 def load_json(hdfs_client, hdfs_file_path, collection, set_of_files):
     with hdfs_client.read(hdfs_file_path, encoding='utf-8') as reader:
+        # Read CSV file into a DataFrame, ideally it will be made by spark in order to avoid bottlenecks
         json_data = json.load(reader)
     if collection.name == 'unemployment-data': 
         json_data = dict(json_data)['result']['records']
@@ -69,7 +47,7 @@ def load_json(hdfs_client, hdfs_file_path, collection, set_of_files):
 
 
 def load_csv(hdfs_client, hdfs_file_path, collection, set_of_files):
-    # Read CSV file into a DataFrame
+    # Read CSV file into a DataFrame, ideally it will be made by spark in order to avoid bottlenecks
     with hdfs_client.read(hdfs_file_path, encoding='utf-8') as reader:
         df = pd.read_csv(reader)
     
@@ -103,12 +81,9 @@ def update_tracking_files(set_of_files, directory="tracking_data", file="trackin
 # Example usage:
 
 
-def persistent_collector():
-    ## Extract arguments
-    args = get_parser().parse_args()
-    
+def persistent_collector(args):
     ## Connect to VM
-    vm = VM()
+    vm = VM(hostname=args.host_ip, port=22, username=args.vm_user, password=args.vm_pass)
     
     print('----------------------------------------------------------')
     print('Starting MongoDB on Virtual Machine...')
@@ -128,17 +103,15 @@ def persistent_collector():
         else: json_ = False
         ## Initialize mongo collection
         mongo_collection = initialize_mongodb(hostname=vm.hostname, port=args.mongo_port, name_db=args.name_mongo_db,  collection_name=src)
-            
-        for dt in hdfs_client.list(f'{vm._DIR_TEMPORAL}/{src}'):
-            for file in hdfs_client.list(f'{vm._DIR_TEMPORAL}/{src}/{dt}'):
-                filepath = f'{vm._DIR_TEMPORAL}/{src}/{dt}/{file}'
-                if filepath in set_of_files: pass
-                else:
-                    print(filepath)
-                    if json_: 
-                        load_json(hdfs_client=hdfs_client, hdfs_file_path=filepath, collection=mongo_collection, set_of_files=set_of_files)
-                    else: 
-                        load_csv(hdfs_client=hdfs_client, hdfs_file_path=filepath, collection=mongo_collection, set_of_files=set_of_files)
+        for file in hdfs_client.list(f'{vm._DIR_TEMPORAL}/{src}'):
+            filepath = f'{vm._DIR_TEMPORAL}/{src}/{file}'
+            if filepath in set_of_files: pass
+            else:
+                print(filepath)
+                if json_: 
+                    load_json(hdfs_client=hdfs_client, hdfs_file_path=filepath, collection=mongo_collection, set_of_files=set_of_files)
+                else: 
+                    load_csv(hdfs_client=hdfs_client, hdfs_file_path=filepath, collection=mongo_collection, set_of_files=set_of_files)
 
         update_tracking_files(set_of_files=set_of_files)
 
